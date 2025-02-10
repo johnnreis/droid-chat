@@ -56,10 +56,12 @@ fun SignInScreen() {
             onValueChange = {
                 email = it
             },
+            modifier = Modifier
+                .padding(all = 16.dp),
             placeholder = stringResource(id = R.string.feature_login_email),
             leadingIcon = R.drawable.ic_envelope,
-            modifier = Modifier
-                .padding(all = 16.dp)
+            keyboardType = KeyboardType.Email
+
         )
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -78,7 +80,6 @@ fun SignInScreen() {
             placeholder = stringResource(id = R.string.feature_login_password),
             leadingIcon = R.drawable.ic_lock,
             keyboardType = KeyboardType.Password,
-
         )
     }
 }
