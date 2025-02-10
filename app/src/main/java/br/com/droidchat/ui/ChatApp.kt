@@ -11,9 +11,7 @@ import br.com.droidchat.navigation.ChatNavHost
 @Composable
 fun ChatApp() {
     Scaffold (
-        bottomBar = {
-
-        }
+        bottomBar = {}
     ) { paddingValues ->
         Box(
             modifier = Modifier

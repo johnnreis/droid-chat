@@ -9,15 +9,9 @@ import br.com.droidchat.ui.feature.signin.SignInRoute
 import br.com.droidchat.ui.feature.splash.SplashRoute
 import kotlinx.serialization.Serializable
 
-@Serializable
-object SplashRoute
-
-@Serializable
-object SignInRoute
-
-@Serializable
-object SignUpRoute
-
+@Serializable object SplashRoute
+@Serializable object SignInRoute
+@Serializable object SignUpRoute
 
 @Composable
 fun ChatNavHost() {
