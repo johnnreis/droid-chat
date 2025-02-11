@@ -7,18 +7,21 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import br.com.droidchat.navigation.ChatNavHost
+import br.com.droidchat.ui.theme.DroidChatTheme
 
 @Composable
 fun ChatApp() {
-    Scaffold (
-        bottomBar = {}
-    ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize()
-        ) {
-            ChatNavHost()
+    DroidChatTheme {
+        Scaffold (
+            bottomBar = {}
+        ) { paddingValues ->
+            Box(
+                modifier = Modifier
+                    .padding(paddingValues)
+                    .fillMaxSize()
+            ) {
+                ChatNavHost()
+            }
         }
     }
 }
