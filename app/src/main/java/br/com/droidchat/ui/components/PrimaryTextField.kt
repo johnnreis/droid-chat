@@ -14,6 +14,8 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -40,7 +42,7 @@ fun PrimaryTextField(
 
     ) {
 
-    val passwordVisible = remember { mutableStateOf(false) }
+    var passwordVisible by remember { mutableStateOf(false) }
 
     Column(
         modifier = modifier
@@ -48,7 +50,9 @@ fun PrimaryTextField(
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                    .fillMaxWidth(),
+
             placeholder = {
                 Text(text = placeholder)
             },
@@ -63,7 +67,7 @@ fun PrimaryTextField(
             },
             trailingIcon = {
                 if (keyboardType == KeyboardType.Password && value.isNotEmpty()) {
-                    val visibilityIcon = if (passwordVisible.value) {
+                    val visibilityIcon = if (passwordVisible) {
                         R.drawable.ic_visibility
                     } else {
                         R.drawable.ic_visibility_off
@@ -72,14 +76,14 @@ fun PrimaryTextField(
                         painter = painterResource(id = visibilityIcon),
                         contentDescription = null,
                         modifier = Modifier.clickable {
-                            passwordVisible.value = !passwordVisible.value
+                            passwordVisible = !passwordVisible
                         },
                         tint = MaterialTheme.colorScheme.primary
                     )
                 }
             },
             visualTransformation = if (keyboardType == KeyboardType.Password) {
-                if (passwordVisible.value) {
+                if (passwordVisible) {
                     VisualTransformation.None
                 } else {
                     PasswordVisualTransformation()
