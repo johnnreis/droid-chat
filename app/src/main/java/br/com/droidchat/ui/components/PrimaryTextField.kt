@@ -1,25 +1,29 @@
 package br.com.droidchat.ui.components
 
 import androidx.annotation.DrawableRes
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material3.Surface
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.droidchat.R
-import br.com.droidchat.ui.theme.ColorError
 import br.com.droidchat.ui.theme.DroidChatTheme
 
 @Composable
@@ -27,57 +31,88 @@ fun PrimaryTextField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-
+    placeholder: String = "",
+    imeAction: ImeAction = ImeAction.Next,
     @DrawableRes
-    loadedIcon: Int? = null,
+    leadingIcon: Int? = null,
+    keyboardType: KeyboardType = KeyboardType.Text,
     errorMessage: String? = null,
 
-) {
-    // TextField(value = "", onValueChange = {})
-    Column (
+    ) {
+
+    val passwordVisible = remember { mutableStateOf(false) }
+
+    Column(
         modifier = modifier
-    ){
-        BasicTextField(
+    ) {
+        OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
-            decorationBox = { innerTextField ->
-                Surface(
-                    shape = CircleShape,
-                ) {
-                    Row (
-                        modifier = Modifier
-                            .padding(16.dp),
-
-                        verticalAlignment = Alignment.CenterVertically
-                    ){
-                        Image(
-                            painter = painterResource(R.drawable.ic_envelope),
-                            contentDescription = null
-                        )
-
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Box(
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            innerTextField()
-                        }
-                        Spacer(modifier = Modifier.width(8.dp))
-
-                        Image(
-                            painter = painterResource(R.drawable.ic_bottom_nav_profile),
-                            contentDescription = null
-                        )
-                    }
+            modifier = Modifier.fillMaxWidth(),
+            placeholder = {
+                Text(text = placeholder)
+            },
+            leadingIcon = {
+                leadingIcon?.let {
+                    Icon(
+                        painter = painterResource(id = leadingIcon),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary
+                    )
                 }
-            }
+            },
+            trailingIcon = {
+                if (keyboardType == KeyboardType.Password && value.isNotEmpty()) {
+                    val visibilityIcon = if (passwordVisible.value) {
+                        R.drawable.ic_visibility
+                    } else {
+                        R.drawable.ic_visibility_off
+                    }
+                    Icon(
+                        painter = painterResource(id = visibilityIcon),
+                        contentDescription = null,
+                        modifier = Modifier.clickable {
+                            passwordVisible.value = !passwordVisible.value
+                        },
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+            },
+            visualTransformation = if (keyboardType == KeyboardType.Password) {
+                if (passwordVisible.value) {
+                    VisualTransformation.None
+                } else {
+                    PasswordVisualTransformation()
+                }
+            } else {
+                VisualTransformation.None
+            },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = keyboardType,
+                imeAction = imeAction,
+            ),
+            singleLine = true,
+            shape = CircleShape,
+            colors = OutlinedTextFieldDefaults.colors(
+                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+                focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+                disabledContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = if (errorMessage != null) {
+                    MaterialTheme.colorScheme.error
+                } else {
+                    MaterialTheme.colorScheme.onSurfaceVariant
+                },
+
+                )
         )
 
         errorMessage?.let {
             Text(
-                text = "Senha requerida",
+                text = it,
                 modifier = Modifier
                     .padding(start = 16.dp),
-                color = ColorError
+                color = MaterialTheme.colorScheme.error
             )
         }
 
@@ -91,7 +126,10 @@ private fun PrimaryTextFieldPreview() {
     DroidChatTheme {
         PrimaryTextField(
             value = "",
-            onValueChange = {}
+            onValueChange = {},
+            placeholder = "E-mail",
+            leadingIcon = R.drawable.ic_envelope,
+            keyboardType = KeyboardType.Password,
         )
     }
 }
