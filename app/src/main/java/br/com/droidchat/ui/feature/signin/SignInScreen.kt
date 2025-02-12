@@ -72,7 +72,10 @@ fun SignInScreen(
 
                 placeholder = stringResource(id = R.string.feature_login_email),
                 leadingIcon = R.drawable.ic_envelope,
-                keyboardType = KeyboardType.Email
+                keyboardType = KeyboardType.Email,
+                errorMessage = formState.emailError?.let {
+                    stringResource(id = it)
+                }
 
             )
 
@@ -89,6 +92,9 @@ fun SignInScreen(
                 placeholder = stringResource(id = R.string.feature_login_password),
                 leadingIcon = R.drawable.ic_lock,
                 keyboardType = KeyboardType.Password,
+                errorMessage = formState.passwordError?.let {
+                    stringResource(id = it)
+                }
             )
 
             Spacer(modifier = Modifier.height(48.dp))
@@ -100,7 +106,6 @@ fun SignInScreen(
                 },
                 modifier = Modifier
                     .padding(horizontal = dimensionResource(id = R.dimen.spacing_medium)),
-
                 isLoading = formState.isLoading
             )
         }
