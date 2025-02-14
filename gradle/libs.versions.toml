@@ -1,18 +1,18 @@
 [versions]
 accompanistPermissions = "0.34.0"
-agp = "8.8.0"
+agp = "8.8.1"
 coilCompose = "2.5.0"
 coreSplashscreen = "1.0.1"
-datastorePreferences = "1.1.1"
-firebaseBom = "33.3.0"
+datastorePreferences = "1.1.2"
+firebaseBom = "33.9.0"
 hiltAndroid = "2.51.1"
 hiltNavigationCompose = "1.2.0"
 jwtdecode = "2.0.2"
-kotlin = "2.0.20"
-kotlinxCoroutinesAndroid = "1.7.3"
-kotlinxSerializationJson = "1.7.1"
-ksp = "2.0.20-1.0.24"
-coreKtx = "1.13.1"
+kotlin = "2.1.10"
+kotlinxCoroutinesAndroid = "1.9.0"
+kotlinxSerializationJson = "2.1.10"
+ksp = "2.1.0-1.0.29"
+coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
@@ -25,12 +25,12 @@ ktorClientLogging = "2.3.6"
 ktorClientResources = "2.3.6"
 ktorClientWebsockets = "2.3.6"
 ktorSerializationKotlinxJson = "2.3.6"
-lifecycleRuntimeKtx = "2.8.6"
-activityCompose = "1.9.2"
-composeBom = "2024.09.02"
-navigationCompose = "2.8.6"
-protobufJavalite = "3.24.4"
-navigationComposeVersion = "2.8.6"
+lifecycleRuntimeKtx = "2.8.7"
+activityCompose = "1.10.0"
+composeBom = "2025.02.00"
+navigationCompose = "2.8.7"
+protobufJavalite = "3.25.1"
+navigationComposeVersion = "2.8.7"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
@@ -77,5 +77,5 @@ navigation-compose = { group = "androidx.navigation", name = "navigation-compose
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlinKsp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kotlinSerializationJson = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinxSerializationJson" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
