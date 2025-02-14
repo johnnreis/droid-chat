@@ -66,7 +66,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     // Serialization
-    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kotlinx.serialization.json.v180)
 
 
 
