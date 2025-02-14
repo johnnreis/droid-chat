@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.kotlinKsp)
-    alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.kotlinSerializationJson)
     alias(libs.plugins.compose.compiler)
 
 
@@ -66,7 +66,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     // Serialization
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
+    implementation(libs.kotlinx.serialization.json.v180)
 
 
 
