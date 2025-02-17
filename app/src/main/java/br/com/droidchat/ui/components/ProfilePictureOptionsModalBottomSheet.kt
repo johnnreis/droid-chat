@@ -1,5 +1,9 @@
 package br.com.droidchat.ui.components
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContract
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
@@ -31,10 +35,21 @@ import br.com.droidchat.ui.theme.DroidChatTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfilePictureOptionsModalBottomSheet(
+    onPictureSelected: (uri: Uri) -> Unit,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
     sheetState: SheetState = rememberModalBottomSheetState(),
 ) {
+
+    val imagePicker = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+        onResult = {
+            it?.let {
+                onPictureSelected(it)
+            }
+        }
+    )
+
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
         modifier = modifier,
@@ -52,7 +67,9 @@ fun ProfilePictureOptionsModalBottomSheet(
         ProfilePictureOptionRow(
             iconResId = R.drawable.ic_photo_library,
             textStringId = R.string.common_upload_photo,
-            onCLick = {}
+            onCLick = {
+                imagePicker.launch("image/*")
+            }
         )
 
     }
@@ -103,7 +120,8 @@ private fun ProfilePictureOptionsModalBottomSheetPreview() {
     DroidChatTheme {
         ProfilePictureOptionsModalBottomSheet(
             onDismissRequest = {},
-            sheetState = sheetState
+            sheetState = sheetState,
+            onPictureSelected = {}
         )
     }
 }
