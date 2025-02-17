@@ -1,15 +1,18 @@
 package br.com.droidchat.ui.feature.signup
 
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.verticalScroll
@@ -18,13 +21,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -60,12 +61,18 @@ fun SignUpScreen(
 ) {
     Box(
         modifier = Modifier
+            .fillMaxSize()
             .background(brush = BackgroundGradient)
-            .verticalScroll(rememberScrollState())
 
     ) {
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .nestedScroll(rememberNestedScrollInteropConnection())
+                .imePadding()
+                .windowInsetsPadding(WindowInsets.systemBars)
+            ,
+
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
@@ -79,7 +86,8 @@ fun SignUpScreen(
 
             Surface(
                 modifier = Modifier
-                    .fillMaxSize(),
+                    .weight(1f)
+                    .verticalScroll(rememberScrollState()),
 
                 shape = MaterialTheme.shapes.extraLarge.copy(
                     bottomStart = CornerSize(0.dp),
@@ -88,10 +96,8 @@ fun SignUpScreen(
                 color = MaterialTheme.colorScheme.surface
             ) {
                 Column(
-                    modifier = Modifier
-                        .padding(16.dp),
+                    modifier = Modifier.padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
-
                 ) {
 
                     ProfilePictureSelector(
@@ -116,39 +122,50 @@ fun SignUpScreen(
                     SecondaryTextField(
                         label = stringResource(id = R.string.feature_sign_up_last_name),
                         value = formState.lastName,
-                        onValueChange = {onFormEvent(SignUpFormEvent.LastNameChanged(it))}
+                        onValueChange = { onFormEvent(SignUpFormEvent.LastNameChanged(it)) }
                     )
 
                     Spacer(modifier = Modifier.height(22.dp))
                     SecondaryTextField(
                         label = stringResource(id = R.string.feature_sign_up_email),
                         value = formState.email,
-                        onValueChange = {onFormEvent(SignUpFormEvent.EmailChanged(it))},
+                        onValueChange = { onFormEvent(SignUpFormEvent.EmailChanged(it)) },
                         keyboardType = KeyboardType.Email
                     )
 
                     Spacer(modifier = Modifier.height(22.dp))
+
+                    val extraTextStringResId = if (
+                        formState.password.isNotEmpty()
+                        && formState.password == formState.passwordConfirmation
+                    ) {
+                        R.string.feature_sign_up_passwords_match
+                    } else null
+
                     SecondaryTextField(
                         label = stringResource(id = R.string.feature_sign_up_password),
                         value = formState.password,
-                        onValueChange = {onFormEvent(SignUpFormEvent.PasswordChanged(it))},
-                        keyboardType = KeyboardType.Password
+                        onValueChange = { onFormEvent(SignUpFormEvent.PasswordChanged(it)) },
+                        keyboardType = KeyboardType.Password,
+                        extraText = extraTextStringResId?.let { stringResource(id = it) }
                     )
 
                     Spacer(modifier = Modifier.height(22.dp))
                     SecondaryTextField(
                         label = stringResource(id = R.string.feature_sign_up_password_confirmation),
                         value = formState.passwordConfirmation,
-                        onValueChange = {onFormEvent(SignUpFormEvent.PasswordConfirmationChanged(it))},
+                        onValueChange = { onFormEvent(SignUpFormEvent.PasswordConfirmationChanged(it)) },
                         keyboardType = KeyboardType.Password,
-                        imeAction = ImeAction.Done
+                        imeAction = ImeAction.Done,
+                        extraText = extraTextStringResId?.let { stringResource(id = it) }
                     )
 
                     Spacer(modifier = Modifier.height(36.dp))
                     PrimaryButton(
                         text = stringResource(R.string.feature_sign_up_button),
-                        onClick = {onFormEvent(SignUpFormEvent.Submit)}
+                        onClick = { onFormEvent(SignUpFormEvent.Submit) }
                     )
+
                 }
             }
             val sheetState = rememberModalBottomSheetState()
@@ -171,7 +188,7 @@ fun SignUpScreen(
                     },
                     sheetState = sheetState,
 
-                )
+                    )
             }
         }
 
