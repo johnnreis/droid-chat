@@ -32,6 +32,7 @@ composeBom = "2025.02.00"
 navigationCompose = "2.8.7"
 protobufJavalite = "3.25.1"
 navigationComposeVersion = "2.8.7"
+screenshotValidationJunitEngine = "0.0.1-alpha09"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
@@ -74,6 +75,7 @@ ktor-client-websockets = { module = "io.ktor:ktor-client-websockets", version.re
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktorSerializationKotlinxJson" }
 protobuf-javalite = { module = "com.google.protobuf:protobuf-javalite", version.ref = "protobufJavalite" }
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationComposeVersion" }
+screenshot-validation-junit-engine = { group = "com.android.tools.screenshot", name = "screenshot-validation-junit-engine", version.ref = "screenshotValidationJunitEngine" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

@@ -4,9 +4,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
+import br.com.droidchat.R
+import br.com.droidchat.ui.validator.FormValidator
 
-class SignUpViewModel : ViewModel() {
+class SignUpViewModel(
+    private val formValidator: FormValidator<SignUpFormState>
+) : ViewModel() {
     var formState by mutableStateOf(SignUpFormState())
         private set
 
@@ -27,9 +30,11 @@ class SignUpViewModel : ViewModel() {
             }
             is SignUpFormEvent.PasswordChanged -> {
                 formState = formState.copy(password = event.password)
+                updatePasswordExtraText()
             }
             is SignUpFormEvent.PasswordConfirmationChanged -> {
                 formState = formState.copy(passwordConfirmation = event.passwordConfirmation)
+                updatePasswordExtraText()
             }
             is SignUpFormEvent.OpenProfilePictureOptionsModalBottomSheet -> {
                 formState = formState.copy(isProfilePictureModalBottomSheetOpen = true)
@@ -38,15 +43,21 @@ class SignUpViewModel : ViewModel() {
                 formState = formState.copy(isProfilePictureModalBottomSheetOpen = false)
             }
             is SignUpFormEvent.Submit -> {
-
+                doSignUp()
             }
         }
 
     }
 
-    private fun isValidForm() : Boolean {
-        return false
+    private fun updatePasswordExtraText() {
+        formState = formState.copy(
+            passwordExtraText = if (formState.password.isNotEmpty()
+                && formState.password == formState.passwordConfirmation ) {
+                R.string.feature_sign_up_passwords_match
+            } else null
+        )
     }
+
 
     private fun doSignUp() {
         if (isValidForm()) {
@@ -54,5 +65,11 @@ class SignUpViewModel : ViewModel() {
 
             // TODO:  request to API
         }
+    }
+
+    private fun isValidForm() : Boolean {
+        return !formValidator.validate(formState).also {
+            formState = it
+        }.hasError
     }
 }

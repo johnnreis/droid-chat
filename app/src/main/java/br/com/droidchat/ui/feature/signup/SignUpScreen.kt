@@ -44,7 +44,9 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun SignUpRoute(
-    viewModel: SignUpViewModel = viewModel()
+    viewModel: SignUpViewModel = viewModel {
+        SignUpViewModel(SignUpFormValidator())
+    }
 ) {
     val formState = viewModel.formState
     SignUpScreen(
@@ -70,8 +72,7 @@ fun SignUpScreen(
                 .fillMaxSize()
                 .nestedScroll(rememberNestedScrollInteropConnection())
                 .imePadding()
-                .windowInsetsPadding(WindowInsets.systemBars)
-            ,
+                .windowInsetsPadding(WindowInsets.systemBars),
 
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -113,8 +114,12 @@ fun SignUpScreen(
                     SecondaryTextField(
                         label = stringResource(id = R.string.feature_sign_up_first_name),
                         value = formState.firstName,
-                        onValueChange = {
-                            onFormEvent(SignUpFormEvent.FirstNameChanged(it))
+                        onValueChange = { onFormEvent(SignUpFormEvent.FirstNameChanged(it)) },
+                        errorText = formState.firstNameError?.let {
+                            stringResource(
+                                id = it,
+                                stringResource(id = R.string.feature_sign_up_first_name)
+                            )
                         }
                     )
 
@@ -122,7 +127,13 @@ fun SignUpScreen(
                     SecondaryTextField(
                         label = stringResource(id = R.string.feature_sign_up_last_name),
                         value = formState.lastName,
-                        onValueChange = { onFormEvent(SignUpFormEvent.LastNameChanged(it)) }
+                        onValueChange = { onFormEvent(SignUpFormEvent.LastNameChanged(it)) },
+                        errorText = formState.lastNameError?.let {
+                            stringResource(
+                                id = it,
+                                stringResource(id = R.string.feature_sign_up_last_name)
+                            )
+                        }
                     )
 
                     Spacer(modifier = Modifier.height(22.dp))
@@ -130,24 +141,19 @@ fun SignUpScreen(
                         label = stringResource(id = R.string.feature_sign_up_email),
                         value = formState.email,
                         onValueChange = { onFormEvent(SignUpFormEvent.EmailChanged(it)) },
-                        keyboardType = KeyboardType.Email
+                        keyboardType = KeyboardType.Email,
+                        errorText = formState.emailError?.let { stringResource(id = it) }
                     )
 
                     Spacer(modifier = Modifier.height(22.dp))
-
-                    val extraTextStringResId = if (
-                        formState.password.isNotEmpty()
-                        && formState.password == formState.passwordConfirmation
-                    ) {
-                        R.string.feature_sign_up_passwords_match
-                    } else null
 
                     SecondaryTextField(
                         label = stringResource(id = R.string.feature_sign_up_password),
                         value = formState.password,
                         onValueChange = { onFormEvent(SignUpFormEvent.PasswordChanged(it)) },
                         keyboardType = KeyboardType.Password,
-                        extraText = extraTextStringResId?.let { stringResource(id = it) }
+                        extraText = formState.passwordExtraText?.let { stringResource(id = it) },
+                        errorText = formState.passwordError?.let { stringResource(id = it) }
                     )
 
                     Spacer(modifier = Modifier.height(22.dp))
@@ -157,7 +163,8 @@ fun SignUpScreen(
                         onValueChange = { onFormEvent(SignUpFormEvent.PasswordConfirmationChanged(it)) },
                         keyboardType = KeyboardType.Password,
                         imeAction = ImeAction.Done,
-                        extraText = extraTextStringResId?.let { stringResource(id = it) }
+                        extraText = formState.passwordExtraText?.let { stringResource(id = it) },
+                        errorText = formState.passwordConfirmationError?.let { stringResource(id = it) }
                     )
 
                     Spacer(modifier = Modifier.height(36.dp))
